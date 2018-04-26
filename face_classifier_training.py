@@ -156,7 +156,7 @@ def test(epoch, save=True):
 
         batches += 1
         test_loss += loss.data[0]
-        predicted = (outputs.data >= 0.5).float()
+        predicted = (outputs.data >= 0.9).float()
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
         
