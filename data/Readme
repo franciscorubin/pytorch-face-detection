@@ -1,0 +1,9 @@
+- dfFaces_24x24_norm contiene: 6099 caras de 24x24 pixels. Cada fila del fichero es una cara y hay tantas columnas como pixels (24x24=576). Las caras que aparecen están normalizadas con media=0 sd=1.
+
+- NotFaces_24x24_norm contiene: 10000 no-caras en las mismas condiciones que el fichero anterior.
+
+IMPORTANTE:
+
+Dado que son pocas caras lo ideal es simular pequeñas rotaciones, traslaciones y escaladas para enriquecer el conjunto. En el caso de no-caras se pueden extraer más no caras de cualquier foto que no contenga.
+
+
