@@ -136,7 +136,7 @@ def train(epoch):
         correct += predicted.eq(targets.data).cpu().sum()
 
     loss_tot = train_loss/batches
-    acc = 100.*correct/total
+    acc = 100.*float(correct)/float(total)
     print('Train: Loss: {} | Acc: {} ({}/{})'.format(loss_tot, acc, correct, total))
 
 def test(epoch, save=True):
@@ -161,12 +161,11 @@ def test(epoch, save=True):
         correct += predicted.eq(targets.data).cpu().sum()
         
     loss_tot = test_loss/batches
-    acc = 100.*correct/total
+    acc = 100.*float(correct)/float(total)
     print('Test: Loss: {} | Acc: {} ({}/{})'.format(loss_tot, acc, correct, total))
 
     if save:
         # Save checkpoint.
-        acc = 100.*correct/total
         print('Total tested: {}, Correct tested: {}, accuracy: {}'.format(total, correct, acc))
         print('Best acc: {}'.format(best_acc))
         if acc > best_acc:
