@@ -5,10 +5,10 @@ import random
 from model import Model
 from face_classifier import isFace
 import numpy as np
+import time
 
 region_height = 24
 region_width = 24
-
 
 class FaceDetector(object):
     def __init__(self, imgPath):
@@ -32,16 +32,9 @@ class FaceDetector(object):
         return self.base_img.resize((int(w / zoom), int(h / zoom)))
 
     def should_include_region(self, region_img):
-        if isFace(self.normalize(region_img)):
+        if isFace(np.array(region_img)):
           return True
         return False
-
-    def normalize(self, region_img):
-        #TODO make sure normalization matches training normalization        
-        img = np.array(region_img)
-        mean = img.mean()
-        std = img.std()
-        return (img - mean) / std
 
     def detect_faces(self):
         img_width, img_height = self.base_img.size
@@ -82,6 +75,10 @@ class FaceDetector(object):
 
 if __name__ == '__main__':
     testImage = os.path.join(os.path.dirname(__file__), './data/test/1.jpg')
+    start = time.time()
     detector = FaceDetector(testImage)
     detector.paint_faces()
     detector.drawn_img.show()
+    end = time.time()
+    timeTaken = end - start
+    print('time taken: {} seconds'.format(timeTaken))

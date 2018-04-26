@@ -20,19 +20,21 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 from PIL import Image
 from model import Model
+import glob
 
 class FaceDataset(Dataset):
-    def __init__(self, X, y, transform=None, transform_target=None):
+    def __init__(self, fileNames, y, transform=None, transform_target=None):
         self.transform = transform
         self.transform_target = transform_target
-        self.X = X
+        self.fileNames = fileNames
         self.y = y
 
     def __len__(self):
         return len(self.y)
 
     def __getitem__(self, idx):
-        img = self.X[idx]       
+        fileName = self.fileNames[idx]
+        img = Image.open(fileName)
         target = self.y[idx]
         if self.transform:
             img = self.transform(img)
@@ -42,7 +44,7 @@ class FaceDataset(Dataset):
             
         return (img, target)
 
-checkpoint_name = 'best'
+checkpoint_name = 'best_full_image'
 print('Starting...')
 
 parser = argparse.ArgumentParser(description='Face Detection')
@@ -56,46 +58,42 @@ use_cuda = torch.cuda.is_available()
 start_epoch = 0
 best_acc = 0
 
-
 #DATA
-faces = np.genfromtxt(os.path.join(os.path.dirname(__file__), 'data/faces_norm'), delimiter=' ')
-notfaces = np.genfromtxt(os.path.join(os.path.dirname(__file__), 'data/notfaces_norm'), delimiter=' ')
-data = np.concatenate((faces, notfaces))
+facesFileNames = glob.glob(os.path.join(os.path.dirname(__file__), 'data/faces/*.pgm'))
+notfacesFileNames = glob.glob(os.path.join(os.path.dirname(__file__), 'data/notfaces/*.pgm'))
 
-facesLabel = np.ones(len(faces))
-notfacesLabel = np.zeros(len(notfaces))
+fileNames = np.concatenate((facesFileNames, notfacesFileNames))
+
+facesLabel = np.ones(len(facesFileNames))
+notfacesLabel = np.zeros(len(notfacesFileNames))
 target = np.concatenate((facesLabel, notfacesLabel))
 
-trainX, testX, trainY, testY = train_test_split(data, target, test_size=0.2, random_state=142)
-trainX = torch.FloatTensor(trainX.reshape(-1, 1, 24, 24))
-testX = torch.FloatTensor(testX.reshape(-1, 1, 24, 24))
+trainFileNames, testFileNames, trainY, testY = train_test_split(fileNames, target, test_size=0.2, random_state=142)
+
 trainY = torch.FloatTensor(trainY).float().unsqueeze(1)
 testY = torch.FloatTensor(testY).float().unsqueeze(1)
 
-#transform_train = transforms.Compose([
-#    transforms.ToPILImage(),
-#    transforms.RandomRotation(5),
-#    transforms.RandomHorizontalFlip(),
-#    transforms.ToTensor()
-#])
-#
-#transform_test = transforms.Compose([
-#    transforms.ToTensor()
-#])
+transform_train = transforms.Compose([
+   transforms.RandomAffine(10, translate=(0.1, 0.1), scale=(0.9, 1.1), shear=5),
+   transforms.RandomHorizontalFlip(),
+   transforms.ToTensor()
+])
 
-#TODO add data augmentation
-train_dataset = FaceDataset(trainX, trainY, transform=None) # No transforms for now
-test_dataset = FaceDataset(testX, testY, transform=None) # No transforms for now
+transform_test = transforms.Compose([
+   transforms.ToTensor()
+])
+
+train_dataset = FaceDataset(trainFileNames, trainY, transform=transform_train) 
+test_dataset = FaceDataset(testFileNames, testY, transform=transform_test)
 
 train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=100, shuffle=True)
 test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=100, shuffle=True)
 
-
-
-
 checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(checkpoint_name))
 if args.resume and os.path.isfile(checkpoint_path):
+   # Load checkpoint.
    print('==> Resuming from checkpoint..')
+   assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
    checkpoint = torch.load(checkpoint_path)
    net = checkpoint['net']
    best_acc = checkpoint['acc']
@@ -124,6 +122,7 @@ def train(epoch):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         optimizer.zero_grad()
+        inputs = inputs.view(-1, 1, 24, 24)
         inputs, targets = Variable(inputs), Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -132,12 +131,12 @@ def train(epoch):
 
         batches += 1
         train_loss += loss.data[0]
-        predicted = (outputs.data >= 0.5).float()
+        predicted = (outputs.data >= 0.9).float()
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
     loss_tot = train_loss/batches
-    acc = 100.*correct/total
+    acc = 100.*float(correct)/float(total)
     print('Train: Loss: {} | Acc: {} ({}/{})'.format(loss_tot, acc, correct, total))
 
 def test(epoch, save=True):
@@ -150,6 +149,7 @@ def test(epoch, save=True):
     for batch_idx, (inputs, targets) in enumerate(test_dataloader):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
+        inputs = inputs.view(-1, 1, 24, 24)
         inputs, targets = Variable(inputs, volatile=True), Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
@@ -161,12 +161,11 @@ def test(epoch, save=True):
         correct += predicted.eq(targets.data).cpu().sum()
         
     loss_tot = test_loss/batches
-    acc = 100.*correct/total
+    acc = 100.*float(correct)/float(total)
     print('Test: Loss: {} | Acc: {} ({}/{})'.format(loss_tot, acc, correct, total))
 
     if save:
         # Save checkpoint.
-        acc = 100.*correct/total
         print('Total tested: {}, Correct tested: {}, accuracy: {}'.format(total, correct, acc))
         print('Best acc: {}'.format(best_acc))
         if acc > best_acc:

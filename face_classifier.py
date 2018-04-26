@@ -7,9 +7,10 @@ import numpy as np
 import torch
 from model import Model
 
-classifier_checkpoint_name = 'best'
+classifier_checkpoint_name = 'best_full_image'
 classifier_checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(classifier_checkpoint_name))
-checkpoint = torch.load(classifier_checkpoint_path)
+checkpoint = torch.load(classifier_checkpoint_path, map_location=lambda storage, loc: storage)
+
 net = checkpoint['net']
 
 # Input: normalized 24x24 image
@@ -17,7 +18,7 @@ def isFace(image):
   img = image.reshape(1, 1, 24, 24)
   inp = torch.autograd.Variable(torch.FloatTensor(img), volatile=True)
   prediction = net(inp)
-  return prediction.data[0][0] >= 0.99
+  return prediction.data[0][0] >= 0.9
 
 
 if __name__ == '__main__':
