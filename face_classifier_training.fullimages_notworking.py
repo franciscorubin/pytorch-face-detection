@@ -74,7 +74,7 @@ trainY = torch.FloatTensor(trainY).float().unsqueeze(1)
 testY = torch.FloatTensor(testY).float().unsqueeze(1)
 
 transform_train = transforms.Compose([
-   transforms.RandomRotation(5),
+   transforms.RandomAffine(10, translate=(0.1, 0.1), scale=(0.9, 1.1), shear=5),
    transforms.RandomHorizontalFlip(),
    transforms.ToTensor()
 ])
