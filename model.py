@@ -29,7 +29,11 @@ class Model(nn.Module):
         )
 
     def forward(self, x):
-        out = self.feature_extractor(x)
+        mean = x.mean()
+        std = x.std()
+        x_norm = (x - mean) / std
+        
+        out = self.feature_extractor(x_norm)
         out = out.view(-1, 512)
         out = self.classifier(out)
         return out

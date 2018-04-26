@@ -73,17 +73,14 @@ trainFileNames, testFileNames, trainY, testY = train_test_split(fileNames, targe
 trainY = torch.FloatTensor(trainY).float().unsqueeze(1)
 testY = torch.FloatTensor(testY).float().unsqueeze(1)
 
-# TODO normalize
 transform_train = transforms.Compose([
    transforms.RandomRotation(5),
    transforms.RandomHorizontalFlip(),
-   transforms.ToTensor(),
-   transforms.Normalize(0.5, 0.5)
+   transforms.ToTensor()
 ])
 
 transform_test = transforms.Compose([
-   transforms.ToTensor(),
-   transforms.Normalize(0.5, 0.5)
+   transforms.ToTensor()
 ])
 
 train_dataset = FaceDataset(trainFileNames, trainY, transform=transform_train) 
