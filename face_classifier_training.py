@@ -16,6 +16,7 @@ from sklearn.model_selection import train_test_split
 from torch.autograd import Variable
 import torch.optim as optim
 import numpy as np
+import config
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from PIL import Image
@@ -131,7 +132,7 @@ def train(epoch):
 
         batches += 1
         train_loss += loss.data[0]
-        predicted = (outputs.data >= 0.9).float()
+        predicted = (outputs.data >= config.THRESHOLD).float()
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
@@ -156,7 +157,7 @@ def test(epoch, save=True):
 
         batches += 1
         test_loss += loss.data[0]
-        predicted = (outputs.data >= 0.9).float()
+        predicted = (outputs.data >= config.THRESHOLD).float()
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
         

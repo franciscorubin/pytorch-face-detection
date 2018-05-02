@@ -6,6 +6,7 @@ import torch.backends.cudnn as cudnn
 import time
 import numpy as np
 import torch
+import config
 from model import Model
 
 classifier_checkpoint_name = 'best_full_image'
@@ -25,7 +26,7 @@ def isFace(image):
   if torch.cuda.is_available():
     inp = inp.cuda()
   prediction = net(inp)
-  return prediction.data[0][0] >= 0.9
+  return prediction.data[0][0] >= config.THRESHOLD
 
 
 if __name__ == '__main__':
