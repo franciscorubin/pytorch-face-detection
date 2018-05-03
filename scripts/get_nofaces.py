@@ -4,11 +4,14 @@ import string
 import random
 import glob
 import cv2
+from PIL import Image
+import random
 
 images_for_nofaces_path = os.path.join(os.path.dirname(__file__), '../data/temp/images_for_nofaces')
 
-faceCascade = cv2.CascadeClassifier('/Users/RUBI349500/Projects/ML/pytorch/face-detection/scripts/haarcascade_frontal.xml')
+faceCascade = cv2.CascadeClassifier(os.path.join(os.path.dirname(__file__), 'haarcascade_frontal.xml'))
 
+crops_path = os.path.join(os.path.dirname(__file__), '../data/extracted_nofaces')
 
 def remove_empty_dirs():
     for folderpath in glob.glob('{}/**'.format(images_for_nofaces_path)):
@@ -46,7 +49,6 @@ def download(keyword=None, limit=10):
                        'output_directory': images_for_nofaces_path, 'format': 'jpg', 'type': 'photo' })
     return limit
 
-
 def remove_with_faces():
     files = glob.glob('{}/**/*.jpg'.format(images_for_nofaces_path), recursive=True) + glob.glob('{}/**/*.jpeg'.format(images_for_nofaces_path), recursive=True)
     for filename in files:
@@ -56,17 +58,56 @@ def remove_with_faces():
             if len(faces) > 0:
                 print('FOUND FACES: Removing file {}'.format(filename))
                 os.remove(filename)
-        except:
-            print('Removing file {}'.format(filename))
+        except Exception as err:
+            print('Removing file, Error: {}'.format(err))
             os.remove(filename)
 
 
-def download_from_keywords_file(limit=20):
+def download_from_keywords_file(limit=100):
     with open(os.path.join(os.path.dirname(__file__), 'keywords.txt'), 'r') as f:
         for line in f.readlines():
             download(line, limit=limit)
 
+
+
+def extract_crops(filename, w_range=(43, 7122), h_range=(55, 8984), amount=100):
+    image = Image.open(filename)
+    img_width, img_height = image.size
+    img_name = filename.split('/')[-1]
+
+    max_w = img_width if img_width < w_range[1] else w_range[1]
+    max_h = img_height if img_height < h_range[1] else h_range[1]
+    min_w = w_range[0]
+    min_h = h_range[0]
+
+    for i in range(0, amount):
+        w = random.randrange(min_w, max_w)
+        h = random.randrange(min_h, max_h)
+
+        x = random.randrange(0, img_width - w)
+        y = random.randrange(0, img_height - h)
+  
+        region_img = image.crop((x, y, x+w, y+h))
+
+        region_img.save('{}/{}_{}.jpg'.format(crops_path, img_name, i))
+
+
+def extract_crops_all_images(w_range=(43, 7122), h_range=(55, 8984), amount=100):
+    files = glob.glob('{}/**/*.jpg'.format(images_for_nofaces_path), recursive=True) + glob.glob('{}/**/*.jpeg'.format(images_for_nofaces_path), recursive=True)
+    for filename in files:
+        print(filename)
+        try:
+            extract_crops(filename, w_range, h_range, amount)            
+            print('Extracted crops on {}. Removing...'.format(filename))
+            os.remove(filename)
+        except Exception as err:
+            print('Error extracting crops on {}: {}'.format(filename, err))
+
+
+
+
 def collect():
-    download()
+    download_from_keywords_file()
     remove_with_faces()
+    extract_crops_all_images()
     remove_empty_dirs()

@@ -8,8 +8,10 @@ import numpy as np
 import torch
 import config
 from model import Model
+import torchvision
+from torchvision import transforms
 
-classifier_checkpoint_name = 'best_full_image'
+classifier_checkpoint_name = 'with_celebA_data'
 classifier_checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(classifier_checkpoint_name))
 checkpoint = torch.load(classifier_checkpoint_path, map_location=lambda storage, loc: storage)
 
@@ -19,13 +21,25 @@ if torch.cuda.is_available():
   net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
   cudnn.benchmark = True
 
+# TODO imsize and transform_test are copied from face_classifier_training. Import them or merge this two files (isFace method also contains stuff of the test method of training)
+imsize = (24, 24)
+
+transform_test = transforms.Compose([
+    transforms.Grayscale(),
+    transforms.Resize(imsize),
+    transforms.ToTensor()
+])
+
+
 # Input: normalized 24x24 image
 def isFace(image):
-  img = image.reshape(1, 1, 24, 24)
-  inp = torch.autograd.Variable(torch.FloatTensor(img), volatile=True)
+  img = transform_test(image)
   if torch.cuda.is_available():
-    inp = inp.cuda()
-  prediction = net(inp)
+    img = img.cuda()
+  img = img.view(-1, 1, 24, 24)
+  img = torch.autograd.Variable(img, volatile=True)
+  
+  prediction = net(img)
   return prediction.data[0][0] >= config.THRESHOLD
 
 

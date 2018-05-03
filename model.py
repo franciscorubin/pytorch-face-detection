@@ -6,17 +6,15 @@ class Model(nn.Module):
         super(Model, self).__init__()
 
         self.feature_extractor = nn.Sequential(
-            self._convGroup(1, 128),
-            self._convGroup(128, 256),
-            self._convGroup(256, 512)
+            self._convGroup(1, 64),
+            self._convGroup(64, 128),
+            self._convGroup(128, 256)
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(512, 128),
+            nn.Linear(256, 64),
             nn.ReLU(True),
-            nn.Linear(128, 128),
-            nn.ReLU(True),
-            nn.Linear(128, 1),
+            nn.Linear(64, 1),
             nn.Sigmoid()
         )
 
@@ -34,6 +32,6 @@ class Model(nn.Module):
         x_norm = (x - mean) / std
         
         out = self.feature_extractor(x_norm)
-        out = out.view(-1, 512)
+        out = out.view(-1, 256)
         out = self.classifier(out)
         return out
