@@ -22,6 +22,22 @@ from torch.utils.data import Dataset
 from PIL import Image
 from model import Model
 import glob
+import random 
+
+checkpoint_name = 'celebA_faster'
+percentage_small_dataset = 0.1
+
+parser = argparse.ArgumentParser(description='Face Detection')
+parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
+parser.add_argument('--resume', '-r', action='store_true',
+                    default=False, help='resume from checkpoint')
+parser.add_argument('--test', '-t', action='store_true', default=False,
+                    help='choose this if you only want to test results on the current model')
+parser.add_argument('--verbose', '-v', action='store_true', default=False,
+                    help='Verbose mode')
+parser.add_argument('--small', '-s', action='store_true', default=True, help='use small dataset')
+
+args = parser.parse_args()
 
 
 class FaceDataset(Dataset):
@@ -46,20 +62,6 @@ class FaceDataset(Dataset):
 
         return (img, target)
 
-
-checkpoint_name = 'celebA_faster'
-print('Starting...')
-
-parser = argparse.ArgumentParser(description='Face Detection')
-parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
-parser.add_argument('--resume', '-r', action='store_true',
-                    default=False, help='resume from checkpoint')
-parser.add_argument('--test', '-t', action='store_true', default=False,
-                    help='choose this if you only want to test results on the current model')
-parser.add_argument('--verbose', '-v', action='store_true', default=False,
-                    help='Verbose mode')
-                    
-args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
 print('Using CUDA: {}'.format(use_cuda))
@@ -90,6 +92,12 @@ target = np.concatenate((facesLabel, notfacesLabel))
 
 trainFileNames, testFileNames, trainY, testY = train_test_split(
     fileNames, target, test_size=0.2, random_state=142)
+
+if args.small:
+    l = len(fileNames)
+    subset = random.sample(range(0, l-1), int(l * percentage_small_dataset))
+    fileNames = fileNames[subset]
+    target = target[subset]
 
 trainY = torch.FloatTensor(trainY).float().unsqueeze(1)
 testY = torch.FloatTensor(testY).float().unsqueeze(1)
