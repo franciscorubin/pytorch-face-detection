@@ -13,7 +13,6 @@ from utils.transforms import Zoom, Translation
 from utils.datasets import TransformImageDataset
 from utils.utils import progress_bar
 from sklearn.model_selection import train_test_split
-from torch.autograd import Variable
 import torch.optim as optim
 import numpy as np
 import config
@@ -25,7 +24,7 @@ import glob
 import random 
 
 checkpoint_name = 'celebA_faster'
-percentage_small_dataset = 0.1
+percentage_small_dataset = 0.05
 
 parser = argparse.ArgumentParser(description='Face Detection')
 parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
@@ -74,7 +73,7 @@ faces_class_filenames = glob.glob(os.path.join(
 notfaces_class_filenames = glob.glob(os.path.join(
     os.path.dirname(__file__), 'data/notfaces/*.pgm'))
 faces_celebA_filenames = glob.glob(os.path.join(
-    os.path.dirname(__file__), 'data/celebA/img_celeba/*.jpg'))
+    os.path.dirname(__file__), 'data/extracted_faces/*.jpg'))
 notfaces_generated_filenames = glob.glob(os.path.join(
     os.path.dirname(__file__), 'data/extracted_nofaces/*.jpg'))
 
@@ -90,14 +89,15 @@ facesLabel = np.ones(len(facesFileNames))
 notfacesLabel = np.zeros(len(notfacesFileNames))
 target = np.concatenate((facesLabel, notfacesLabel))
 
-trainFileNames, testFileNames, trainY, testY = train_test_split(
-    fileNames, target, test_size=0.2, random_state=142)
-
 if args.small:
+    print('Using small dataset ({})'.format(percentage_small_dataset))
     l = len(fileNames)
     subset = random.sample(range(0, l-1), int(l * percentage_small_dataset))
     fileNames = fileNames[subset]
     target = target[subset]
+
+trainFileNames, testFileNames, trainY, testY = train_test_split(
+    fileNames, target, test_size=0.2, random_state=142)
 
 trainY = torch.FloatTensor(trainY).float().unsqueeze(1)
 testY = torch.FloatTensor(testY).float().unsqueeze(1)
@@ -106,8 +106,8 @@ imsize = (24, 24)
 
 transform_train = transforms.Compose([
     transforms.Grayscale(),
-    transforms.RandomAffine(10, translate=(0.1, 0.1),
-                            scale=(0.9, 1.1), shear=5),
+    # transforms.RandomAffine(10, translate=(0.1, 0.1),
+    #                         scale=(0.9, 1.1), shear=5),
     transforms.RandomHorizontalFlip(),
     transforms.Resize(imsize),
     transforms.ToTensor()
@@ -165,13 +165,12 @@ def train(epoch):
             inputs, targets = inputs.cuda(), targets.cuda()
         optimizer.zero_grad()
         inputs = inputs.view(-1, 1, 24, 24)
-        inputs, targets = Variable(inputs), Variable(targets)
         outputs = net(inputs)
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
 
-        c_loss = loss.data[0]
+        c_loss = loss.item()
         predicted = (outputs.data >= config.THRESHOLD).float()
         c_tot = targets.size(0)
         c_correct = predicted.eq(targets.data).cpu().sum()
@@ -202,15 +201,16 @@ def test(epoch, save=True):
         if use_cuda:
             inputs, targets = inputs.cuda(), targets.cuda()
         inputs = inputs.view(-1, 1, 24, 24)
-        inputs, targets = Variable(inputs, volatile=True), Variable(targets)
-        outputs = net(inputs)
-        loss = criterion(outputs, targets)
 
-        batches += 1
-        test_loss += loss.data[0]
-        predicted = (outputs.data >= config.THRESHOLD).float()
-        total += targets.size(0)
-        correct += predicted.eq(targets.data).cpu().sum()
+        with torch.no_grad():
+            outputs = net(inputs)
+            loss = criterion(outputs, targets)
+
+            batches += 1
+            test_loss += loss.item()
+            predicted = (outputs.data >= config.THRESHOLD).float()
+            total += targets.size(0)
+            correct += predicted.eq(targets.data).cpu().sum()
 
     loss_tot = test_loss / batches
     acc = 100. * float(correct) / float(total)
@@ -218,10 +218,8 @@ def test(epoch, save=True):
 
     if save:
         # Save checkpoint.
-        print('Total tested: {}, Correct tested: {}, accuracy: {}'.format(
-            total, correct, acc))
-        print('Best acc: {}'.format(best_acc))
         if acc > best_acc:
+            print('New best acc: {}'.format(acc))
             print('Saving..')
             state = {
                 'net': net.module if use_cuda else net,

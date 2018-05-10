@@ -5,7 +5,6 @@ import random
 import glob
 import cv2
 from PIL import Image
-import random
 
 images_for_nofaces_path = os.path.join(os.path.dirname(__file__), '../data/temp/images_for_nofaces')
 
