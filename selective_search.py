@@ -37,7 +37,8 @@ if __name__ == "__main__":
     
     fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(6, 6))
     ax.imshow(img)
-    for x, y, w, h in img:
+    for box in boxes:
+        (x, y, w, h) = box
         rect = mpatches.Rectangle(
             (x, y), w, h, fill=False, edgecolor='red', linewidth=1)
         ax.add_patch(rect)
