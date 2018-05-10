@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 import sys
 import random
 from model import Model
-from face_classifier import isFace
+from face_classifier import isFace, getFaces
 import numpy as np
 import time
 
@@ -18,8 +18,7 @@ class FaceDetector(object):
 
         self.base_img = self.base_img.convert('L')
 
-    def paint_faces(self):
-        detections = self.detect_faces()
+    def paint_faces(self, detections):
         for det in detections:
             self.paint_rectangle(det)
 
@@ -36,14 +35,18 @@ class FaceDetector(object):
           return True
         return False
 
-    def detect_faces(self):
-        img_width, img_height = self.base_img.size
-        regions = []
-        detections = []
+    def detect_faces(self, crops_images, crops_info):
+        faces = getFaces(crops_images, already_greyscale=True)
+        return np.array(crops_info)[faces]
 
-        total_checks = 0
+    def generate_crops(self):
+        img_width, img_height = self.base_img.size
+
         zoom = 1
         zoomed_img = self.base_img
+
+        crops_info = []
+        crops_images = []
         # Stop zooming when one of the image dimensions is lower than the region size
         while img_width >= region_width and img_height >= region_height:
             x_index = 0
@@ -52,11 +55,10 @@ class FaceDetector(object):
             while y_index + region_height <= img_height:
                 while x_index + region_width <= img_width:
                     region_img = zoomed_img.crop((x_index, y_index, x_index+region_width, y_index+region_height))
-                    if self.should_include_region(region_img):
-                        rectangle = (zoom, x_index, y_index)
-                        detections.append(rectangle)
+                    rectangle = (zoom, x_index, y_index)
+                    crops_info.append(rectangle)
+                    crops_images.append(region_img)
 
-                    total_checks += 1
                     x_index += 2  # TODO analyse best increases here
 
                 x_index = 0
@@ -68,16 +70,17 @@ class FaceDetector(object):
             zoomed_img = self.base_img_zoomed(zoom)
             img_width, img_height = zoomed_img.size
 
-        print('Total checks: {}'.format(total_checks))
-        print('Total detections: {}'.format(len(detections)))
-        return detections
+        print('Total crops: {}'.format(len(crops_images)))
+        return (crops_images, crops_info)
 
 
 if __name__ == '__main__':
     testImage = os.path.join(os.path.dirname(__file__), './data/test/1.jpg')
     start = time.time()
     detector = FaceDetector(testImage)
-    detector.paint_faces()
+    (crops_images, crops_info) = detector.generate_crops()
+    detections = detector.detect_faces(crops_images, crops_info)
+    detector.paint_faces(detections)
     detector.drawn_img.show()
     end = time.time()
     timeTaken = end - start

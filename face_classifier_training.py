@@ -25,8 +25,10 @@ import random
 
 ANTES DE ENTRENAR, HACER LOG DE METRICS PARA LA MEMORIA
 
-checkpoint_name = 'celebA_much_faster'
+checkpoint_name = 'celebA_much_faster_0.5'
 percentage_small_dataset = 0.05
+
+threshold = 0.5
 
 parser = argparse.ArgumentParser(description='Face Detection')
 parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
@@ -173,7 +175,7 @@ def train(epoch):
         optimizer.step()
 
         c_loss = loss.item()
-        predicted = (outputs.data >= config.THRESHOLD).float()
+        predicted = (outputs.data >= threshold).float()
         c_tot = targets.size(0)
         c_correct = predicted.eq(targets.data).cpu().sum()
         c_acc = 100. * float(c_correct) / float(c_tot)
@@ -210,7 +212,7 @@ def test(epoch, save=True):
 
             batches += 1
             test_loss += loss.item()
-            predicted = (outputs.data >= config.THRESHOLD).float()
+            predicted = (outputs.data >= threshold).float()
             total += targets.size(0)
             correct += predicted.eq(targets.data).cpu().sum()
 
