@@ -1,0 +1,192 @@
+stty: 'standard input': Inappropriate ioctl for device
+/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/functional.py:1474: UserWarning: Using a target size (torch.Size([100, 1])) that is different to the input size (torch.Size([25, 1])) is deprecated. Please ensure they have the same size.
+  "Please ensure they have the same size.".format(target.size(), input.size()))
+Using CUDA: True
+Using small dataset (0.05)
+==> Building model..
+==> Starting Training
+Traceback (most recent call last):
+  File "face_classifier_training.py", line 239, in <module>
+    train(epoch)
+  File "face_classifier_training.py", line 169, in train
+    loss = criterion(outputs, targets)
+  File "/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py", line 491, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/modules/loss.py", line 433, in forward
+    reduce=self.reduce)
+  File "/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/functional.py", line 1477, in binary_cross_entropy
+    "!= input nelement ({})".format(target.nelement(), input.nelement()))
+ValueError: Target and input must have the same number of elements. target nelement (100) != input nelement (25)
+stty: 'standard input': Inappropriate ioctl for device
+/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/functional.py:1474: UserWarning: Using a target size (torch.Size([100, 1])) that is different to the input size (torch.Size([25, 1])) is deprecated. Please ensure they have the same size.
+  "Please ensure they have the same size.".format(target.size(), input.size()))
+Using CUDA: True
+Using small dataset (0.05)
+==> Building model..
+==> Starting Training
+Traceback (most recent call last):
+  File "face_classifier_training.py", line 239, in <module>
+    train(epoch)
+  File "face_classifier_training.py", line 169, in train
+    loss = criterion(outputs, targets)
+  File "/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py", line 491, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/modules/loss.py", line 433, in forward
+    reduce=self.reduce)
+  File "/home/paperspace/anaconda3/lib/python3.6/site-packages/torch/nn/functional.py", line 1477, in binary_cross_entropy
+    "!= input nelement ({})".format(target.nelement(), input.nelement()))
+ValueError: Target and input must have the same number of elements. target nelement (100) != input nelement (25)
+stty: 'standard input': Inappropriate ioctl for device
+Using CUDA: True
+Using small dataset (0.05)
+==> Building model..
+==> Starting Training
+Train: Loss: 0.1804436016517381 | Acc: 63.234802939211754 (7573/11976)
+Test: Loss: 0.0664737972120444 | Acc: 78.96494156928213 (2365/2995)
+New best acc: 78.96494156928213
+Saving..
+Epoch 0 took 65.77626967430115 seconds
+Train: Loss: 0.04819624746839205 | Acc: 86.54809619238478 (10365/11976)
+Test: Loss: 0.03301889797051748 | Acc: 87.47913188647746 (2620/2995)
+New best acc: 87.47913188647746
+Saving..
+Epoch 1 took 54.97510552406311 seconds
+Train: Loss: 0.03143811643046016 | Acc: 91.4495657982632 (10952/11976)
+Test: Loss: 0.02389101586304605 | Acc: 93.32220367278798 (2795/2995)
+New best acc: 93.32220367278798
+Saving..
+Epoch 2 took 55.45463013648987 seconds
+Train: Loss: 0.02417432680958882 | Acc: 93.87107548430194 (11242/11976)
+Test: Loss: 0.021556211247419316 | Acc: 93.0550918196995 (2787/2995)
+Epoch 3 took 55.56877565383911 seconds
+Train: Loss: 0.01789715396783625 | Acc: 95.10688042752172 (11390/11976)
+Test: Loss: 0.018348197421679893 | Acc: 96.29382303839733 (2884/2995)
+New best acc: 96.29382303839733
+Saving..
+Epoch 4 took 55.16005873680115 seconds
+Train: Loss: 0.01587216174424005 | Acc: 95.63293253173013 (11453/11976)
+Test: Loss: 0.014848716106886666 | Acc: 96.36060100166945 (2886/2995)
+New best acc: 96.36060100166945
+Saving..
+Epoch 5 took 55.36363887786865 seconds
+Train: Loss: 0.013520713449300578 | Acc: 96.32598530394121 (11536/11976)
+Test: Loss: 0.014130841156778236 | Acc: 96.86143572621035 (2901/2995)
+New best acc: 96.86143572621035
+Saving..
+Epoch 6 took 55.49641251564026 seconds
+Train: Loss: 0.011185869088512846 | Acc: 96.58483633934536 (11567/11976)
+Test: Loss: 0.018745466057832044 | Acc: 98.29716193656094 (2944/2995)
+New best acc: 98.29716193656094
+Saving..
+Epoch 7 took 56.29564833641052 seconds
+Train: Loss: 0.011138832275173626 | Acc: 96.76018704074816 (11588/11976)
+Test: Loss: 0.014035054536846777 | Acc: 94.52420701168614 (2831/2995)
+Epoch 8 took 55.927382707595825 seconds
+Train: Loss: 0.009610948036424816 | Acc: 97.0190380761523 (11619/11976)
+Test: Loss: 0.01140453569435825 | Acc: 97.26210350584307 (2913/2995)
+Epoch 9 took 55.303168535232544 seconds
+Train: Loss: 0.010356464541594808 | Acc: 97.36138944555778 (11660/11976)
+Test: Loss: 0.011000860571706047 | Acc: 96.92821368948248 (2903/2995)
+Epoch 10 took 55.41422891616821 seconds
+Train: Loss: 0.007927236953401006 | Acc: 97.53674014696058 (11681/11976)
+Test: Loss: 0.012164782426164795 | Acc: 97.42904841402337 (2918/2995)
+Epoch 11 took 55.12219738960266 seconds
+Train: Loss: 0.00806520490150433 | Acc: 97.58684034736139 (11687/11976)
+Test: Loss: 0.028590638066331546 | Acc: 98.56427378964942 (2952/2995)
+New best acc: 98.56427378964942
+Saving..
+Epoch 12 took 55.696213245391846 seconds
+Train: Loss: 0.008555266619077883 | Acc: 97.67034068136273 (11697/11976)
+Test: Loss: 0.009997250073744605 | Acc: 98.09682804674458 (2938/2995)
+Epoch 13 took 54.620152711868286 seconds
+Train: Loss: 0.008424057665494426 | Acc: 97.69539078156312 (11700/11976)
+Test: Loss: 0.011013990015878031 | Acc: 97.69616026711185 (2926/2995)
+Epoch 14 took 54.74772524833679 seconds
+Train: Loss: 0.0064770267378965705 | Acc: 98.0878423513694 (11747/11976)
+Test: Loss: 0.009212929421725373 | Acc: 98.39732888146912 (2947/2995)
+Epoch 15 took 55.843698024749756 seconds
+Train: Loss: 0.008336003451646926 | Acc: 97.62024048096193 (11691/11976)
+Test: Loss: 0.012022173660807312 | Acc: 97.76293823038397 (2928/2995)
+Epoch 16 took 55.57160520553589 seconds
+Train: Loss: 0.007083998442006608 | Acc: 97.9625918503674 (11732/11976)
+Test: Loss: 0.010349884885363281 | Acc: 98.6644407345576 (2955/2995)
+New best acc: 98.6644407345576
+Saving..
+Epoch 17 took 56.16014099121094 seconds
+Train: Loss: 0.006150949222986432 | Acc: 98.16299265197061 (11756/11976)
+Test: Loss: 0.008946793087913345 | Acc: 97.6627712854758 (2925/2995)
+Epoch 18 took 54.7079336643219 seconds
+Train: Loss: 0.005639365957176778 | Acc: 98.0878423513694 (11747/11976)
+Test: Loss: 0.009331257144610087 | Acc: 98.09682804674458 (2938/2995)
+Epoch 19 took 56.10468053817749 seconds
+Train: Loss: 0.005630224301421549 | Acc: 98.07114228456913 (11745/11976)
+Test: Loss: 0.008204223258265605 | Acc: 98.69782971619365 (2956/2995)
+New best acc: 98.69782971619365
+Saving..
+Epoch 20 took 56.179912090301514 seconds
+Train: Loss: 0.005045702956461658 | Acc: 98.31329325317301 (11774/11976)
+Test: Loss: 0.012501670761654775 | Acc: 98.86477462437395 (2961/2995)
+New best acc: 98.86477462437395
+Saving..
+Epoch 21 took 55.86620306968689 seconds
+Train: Loss: 0.00426770094394063 | Acc: 98.32164328657315 (11775/11976)
+Test: Loss: 0.008933112648082896 | Acc: 98.59766277128547 (2953/2995)
+Epoch 22 took 55.32067584991455 seconds
+Train: Loss: 0.004911486583781274 | Acc: 98.43854375417502 (11789/11976)
+Test: Loss: 0.009138530172640458 | Acc: 97.79632721202003 (2929/2995)
+Epoch 23 took 55.767969369888306 seconds
+Train: Loss: 0.004565562157464834 | Acc: 98.22979291917167 (11764/11976)
+Test: Loss: 0.013598458969499915 | Acc: 95.92654424040067 (2873/2995)
+Epoch 24 took 55.77566599845886 seconds
+Train: Loss: 0.004405771168724944 | Acc: 98.48864395457582 (11795/11976)
+Test: Loss: 0.009492326265899464 | Acc: 97.8297161936561 (2930/2995)
+Epoch 25 took 55.95476984977722 seconds
+Train: Loss: 0.003719993803194181 | Acc: 98.60554442217769 (11809/11976)
+Test: Loss: 0.011226050276309251 | Acc: 96.49415692821368 (2890/2995)
+Epoch 26 took 55.55616092681885 seconds
+Train: Loss: 0.003772784367174609 | Acc: 98.54709418837675 (11802/11976)
+Test: Loss: 0.008400060698234787 | Acc: 98.39732888146912 (2947/2995)
+Epoch 27 took 56.367841720581055 seconds
+Train: Loss: 0.0037320436007576064 | Acc: 98.72244488977955 (11823/11976)
+Test: Loss: 0.007598655259547134 | Acc: 98.69782971619365 (2956/2995)
+Epoch 28 took 55.89921236038208 seconds
+Train: Loss: 0.0038565930010615074 | Acc: 98.53874415497663 (11801/11976)
+Test: Loss: 0.008339501447820415 | Acc: 98.49749582637729 (2950/2995)
+Epoch 29 took 56.124088287353516 seconds
+Train: Loss: 0.0037616859932313672 | Acc: 98.58884435537742 (11807/11976)
+Test: Loss: 0.010053155769128352 | Acc: 97.36227045075125 (2916/2995)
+Epoch 30 took 55.740662574768066 seconds
+Train: Loss: 0.0037825418660456006 | Acc: 98.63059452237809 (11812/11976)
+Test: Loss: 0.00841641443548724 | Acc: 98.09682804674458 (2938/2995)
+Epoch 31 took 55.845733642578125 seconds
+Train: Loss: 0.003122233811397261 | Acc: 98.57214428857715 (11805/11976)
+Test: Loss: 0.00784117432582813 | Acc: 98.96494156928213 (2964/2995)
+New best acc: 98.96494156928213
+Saving..
+Epoch 32 took 55.91309642791748 seconds
+Train: Loss: 0.0032753455197962467 | Acc: 98.56379425517702 (11804/11976)
+Test: Loss: 0.008875365826922159 | Acc: 98.09682804674458 (2938/2995)
+Epoch 33 took 56.19116497039795 seconds
+Train: Loss: 0.0034761773133747437 | Acc: 98.62224448897796 (11811/11976)
+Test: Loss: 0.008828292224400987 | Acc: 98.43071786310517 (2948/2995)
+Epoch 34 took 55.267836809158325 seconds
+Train: Loss: 0.0036528074536666586 | Acc: 98.40514362057448 (11785/11976)
+Test: Loss: 0.008186972344992683 | Acc: 98.09682804674458 (2938/2995)
+Epoch 35 took 55.71000838279724 seconds
+Train: Loss: 0.0033488031695014797 | Acc: 98.71409485637943 (11822/11976)
+Test: Loss: 0.009794407134177164 | Acc: 98.93155258764608 (2963/2995)
+Epoch 36 took 56.321208000183105 seconds
+Train: Loss: 0.0029863441246561705 | Acc: 98.74749498997996 (11826/11976)
+Test: Loss: 0.007756550352011496 | Acc: 98.76460767946578 (2958/2995)
+Epoch 37 took 55.2433135509491 seconds
+Train: Loss: 0.0028765518955575923 | Acc: 98.8059452237809 (11833/11976)
+Test: Loss: 0.008242923795478418 | Acc: 97.9966611018364 (2935/2995)
+Epoch 38 took 55.34982228279114 seconds
+Train: Loss: 0.0024086262402609766 | Acc: 98.71409485637943 (11822/11976)
+Test: Loss: 0.008023939198271062 | Acc: 97.89649415692821 (2932/2995)
+Epoch 39 took 55.868253231048584 seconds
+Train: Loss: 0.0026646203821049613 | Acc: 98.73914495657982 (11825/11976)
+Test: Loss: 0.008662704488961026 | Acc: 98.26377295492487 (2943/2995)
+Epoch 40 took 55.554206132888794 seconds
+Train: Loss: 0.002827218066037555 | Acc: 98.79759519038076 (11832/11976)
+Test: Loss: 0.008012094116808536 | Acc: 98.73121869782972 (2957/2995)

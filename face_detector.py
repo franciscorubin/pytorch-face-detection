@@ -32,7 +32,7 @@ class FaceDetector(object):
         return self.base_img.resize((int(w / zoom), int(h / zoom)))
 
     def should_include_region(self, region_img):
-        if isFace(region_img):
+        if isFace(region_img, already_greyscale=True):
           return True
         return False
 

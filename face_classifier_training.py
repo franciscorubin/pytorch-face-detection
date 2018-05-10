@@ -23,7 +23,9 @@ from model import Model
 import glob
 import random 
 
-checkpoint_name = 'celebA_faster'
+ANTES DE ENTRENAR, HACER LOG DE METRICS PARA LA MEMORIA
+
+checkpoint_name = 'celebA_much_faster'
 percentage_small_dataset = 0.05
 
 parser = argparse.ArgumentParser(description='Face Detection')
@@ -34,7 +36,7 @@ parser.add_argument('--test', '-t', action='store_true', default=False,
                     help='choose this if you only want to test results on the current model')
 parser.add_argument('--verbose', '-v', action='store_true', default=False,
                     help='Verbose mode')
-parser.add_argument('--small', '-s', action='store_true', default=True, help='use small dataset')
+parser.add_argument('--small', '-s', action='store_true', default=False, help='use small dataset')
 
 args = parser.parse_args()
 
