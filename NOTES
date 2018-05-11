@@ -1,0 +1,1 @@
+- doing the crop classification in batches instead of one by one reduced time from 180s to 10s

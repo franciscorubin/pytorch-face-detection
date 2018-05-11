@@ -12,6 +12,7 @@ from model import Model
 import torchvision
 from torchvision import transforms
 from PIL import Image
+import time
 import random
 import math
 
@@ -59,11 +60,14 @@ def isFace(image, already_greyscale=False):
 
 batch_size = 1024
 def getFaces(imags, already_greyscale=False):
+    startTime = time.time()
     if already_greyscale:
         img_list = torch.stack([transform_test_no_greyscale(image) for image in imags])
     else:
         img_list = torch.stack([transform_test(image) for image in images])
 
+    transformEndTime = time.time()
+    print('Time taken on transforms: {} seconds'.format(transformEndTime-startTime))
     if torch.cuda.is_available():
         img_list = img_list.cuda()
 
