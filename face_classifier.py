@@ -64,7 +64,7 @@ def getFaces(imags, already_greyscale=False):
     if already_greyscale:
         img_list = torch.stack([transform_test_no_greyscale(image) for image in imags])
     else:
-        img_list = torch.stack([transform_test(image) for image in images])
+        img_list = torch.stack([transform_test(image) for image in imags])
 
     transformEndTime = time.time()
     print('Time taken on transforms: {} seconds'.format(transformEndTime-startTime))
