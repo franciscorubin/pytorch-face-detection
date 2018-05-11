@@ -13,6 +13,7 @@ import torchvision
 from torchvision import transforms
 from PIL import Image
 import random
+import math
 
 classifier_checkpoint_name = 'celebA_much_faster_0.5'
 classifier_checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(classifier_checkpoint_name))
@@ -56,6 +57,7 @@ def isFace(image, already_greyscale=False):
       prediction = net(img)
   return prediction.data[0][0] >= threshold
 
+batch_size = 1024
 def getFaces(imags, already_greyscale=False):
     if already_greyscale:
         img_list = torch.stack([transform_test_no_greyscale(image) for image in imags])
@@ -66,10 +68,17 @@ def getFaces(imags, already_greyscale=False):
         img_list = img_list.cuda()
 
     img_list = img_list.view(-1, 1, 24, 24)
-
+    l = len(img_list)
+    n = math.ceil(l / batch_size)
+    res = []
     with torch.no_grad():
-        prediction = net(img_list)
-    return (prediction >= threshold).numpy().astype('bool')
+        for i in range(0, n):
+            prediction = net(img_list[i*batch_size:(i*batch_size) + batch_size])
+            if torch.cuda.is_available():
+                prediction = prediction.cpu()
+            pred_res = np.squeeze((prediction >= threshold).numpy().astype('bool'))
+            res.extend(pred_res)
+    return res
 
 if __name__ == '__main__':
     faces = glob.glob('{}/*'.format(os.path.join(os.path.dirname(__file__), 'data/extracted_faces')))

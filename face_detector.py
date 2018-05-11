@@ -77,11 +77,17 @@ class FaceDetector(object):
 if __name__ == '__main__':
     testImage = os.path.join(os.path.dirname(__file__), './data/test/1.jpg')
     start = time.time()
+
     detector = FaceDetector(testImage)
+    endInit = time.time()
+
     (crops_images, crops_info) = detector.generate_crops()
+    endCrops = time.time()
+
     detections = detector.detect_faces(crops_images, crops_info)
+    endDetector = time.time()
+
     detector.paint_faces(detections)
     detector.drawn_img.show()
-    end = time.time()
-    timeTaken = end - start
-    print('time taken: {} seconds'.format(timeTaken))
+
+    print('Time taken (seconds): Init: {}, Crops: {}, Detection: {}, Total: {}'.format(endInit - start, endCrops - endInit, endDetector - endCrops, endDetector - start))
