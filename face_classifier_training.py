@@ -9,9 +9,10 @@ import time
 import torch.nn as nn
 import torchvision
 from torchvision import transforms
-from utils.transforms import Zoom, Translation
-from utils.datasets import TransformImageDataset
-from utils.utils import progress_bar
+from pytorch_utils.transforms import Zoom, Translation
+from pytorch_utils.datasets import TransformImageDataset
+from pytorch_utils.general import progress_bar
+from pytorch_utils.helpers import Metrics
 from sklearn.model_selection import train_test_split
 import torch.optim as optim
 import numpy as np
@@ -19,19 +20,18 @@ import config
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 from PIL import Image
-from model import Model
+from model import Model, Model2, Model3, Model4, Model5, Model6
 import glob
 import random 
 
-ANTES DE ENTRENAR, HACER LOG DE METRICS PARA LA MEMORIA
+checkpoint_name = 'modelX'
 
-checkpoint_name = 'celebA_much_faster_0.5'
 percentage_small_dataset = 0.05
-
 threshold = 0.5
 
 parser = argparse.ArgumentParser(description='Face Detection')
 parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
+parser.add_argument('--epochs', default=500, type=int, help='nr of epochs')
 parser.add_argument('--resume', '-r', action='store_true',
                     default=False, help='resume from checkpoint')
 parser.add_argument('--test', '-t', action='store_true', default=False,
@@ -39,9 +39,11 @@ parser.add_argument('--test', '-t', action='store_true', default=False,
 parser.add_argument('--verbose', '-v', action='store_true', default=False,
                     help='Verbose mode')
 parser.add_argument('--small', '-s', action='store_true', default=False, help='use small dataset')
-
+parser.add_argument('--checkpoint', default=checkpoint_name, type=str, help='checkpont name to use')
 args = parser.parse_args()
 
+smallStr = '_small' if args.small else ''
+metrics = Metrics(os.path.join(os.path.dirname(__file__), 'logs/{}{}.json'.format(args.checkpoint, smallStr)))
 
 class FaceDataset(Dataset):
     def __init__(self, fileNames, y, transform=None, transform_target=None):
@@ -132,7 +134,7 @@ test_dataloader = torch.utils.data.DataLoader(
     test_dataset, batch_size=100, shuffle=True)
 
 checkpoint_path = os.path.join(os.path.dirname(
-    __file__), 'checkpoint/{}.ckpt'.format(checkpoint_name))
+    __file__), 'checkpoint/{}.ckpt'.format(args.checkpoint))
 if args.resume and os.path.isfile(checkpoint_path):
     # Load checkpoint.
     print('==> Resuming from checkpoint..')
@@ -192,7 +194,7 @@ def train(epoch):
     loss_tot = train_loss / batches
     acc = 100. * float(correct) / float(total)
     print('Train: Loss: {} | Acc: {} ({}/{})'.format(loss_tot, acc, correct, total))
-
+    return loss_tot
 
 def test(epoch, save=True):
     global best_acc
@@ -234,17 +236,20 @@ def test(epoch, save=True):
                 os.mkdir('checkpoint')
             torch.save(state, checkpoint_path)
             best_acc = acc
-
+    return loss_tot
 
 if args.test is False:
     print('==> Starting Training')
-    for epoch in range(start_epoch, start_epoch + 500):
+    for epoch in range(start_epoch, start_epoch + args.epochs):
         start = time.time()
-        train(epoch)
-        test(epoch)
+        train_loss = train(epoch)
+        test_loss = test(epoch)
         end = time.time()
         timeTaken = end - start
         print('Epoch {} took {} seconds'.format(epoch, timeTaken))
+        metrics.track({'epoch': epoch, 'train_loss': train_loss, 'test_loss': test_loss })
+        
+    metrics.save()
 else:
     start = time.time()
     test(0, save=False)

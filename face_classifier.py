@@ -16,17 +16,30 @@ import time
 import random
 import math
 
-classifier_checkpoint_name = 'celebA_much_faster_0.5'
-classifier_checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(classifier_checkpoint_name))
-checkpoint = torch.load(classifier_checkpoint_path, map_location=lambda storage, loc: storage)
-
+net = None
 threshold = 0.999
+classifier_checkpoint_name = 'celebA_much_faster_0.5'
 
-net = checkpoint['net']
-if torch.cuda.is_available():
-  net = net.cuda()
-  net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
-  cudnn.benchmark = True
+def init(checkpoint_name=None, threshold_=None):
+    global classifier_checkpoint_name
+    global threshold
+    global net
+
+    if checkpoint_name:
+        classifier_checkpoint_name = checkpoint_name
+
+    if threshold_:
+        threshold = threshold_
+
+    classifier_checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(classifier_checkpoint_name))
+    checkpoint = torch.load(classifier_checkpoint_path, map_location=lambda storage, loc: storage)
+
+    net = checkpoint['net']
+    if torch.cuda.is_available():
+        net = net.cuda()
+        net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
+        cudnn.benchmark = True
+
 
 # TODO imsize and transform_test are copied from face_classifier_training. Import them or merge this two files (isFace method also contains stuff of the test method of training)
 imsize = (24, 24)
@@ -85,6 +98,8 @@ def getFaces(imags, already_greyscale=False):
     return res
 
 if __name__ == '__main__':
+    init()
+    
     faces = glob.glob('{}/*'.format(os.path.join(os.path.dirname(__file__), 'data/extracted_faces')))
     nofaces = glob.glob('{}/*'.format(os.path.join(os.path.dirname(__file__), 'data/extracted_nofaces')))
 

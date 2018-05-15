@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw
 import sys
 import random
 from model import Model
-from face_classifier import isFace, getFaces
+from face_classifier import isFace, getFaces, init
 import numpy as np
 import time
 
@@ -75,6 +75,8 @@ class FaceDetector(object):
 
 
 if __name__ == '__main__':
+    init()
+
     testImage = os.path.join(os.path.dirname(__file__), './data/test/1.jpg')
     start = time.time()
 
