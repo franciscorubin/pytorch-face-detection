@@ -110,7 +110,7 @@ class Model4(nn.Module):
         self.feature_extractor = nn.Sequential(
             self._convGroup(1, 64)
         )
-        self.classifier_in = 64*12*12
+        self.classifier_in = 64*11*11
         self.classifier = nn.Sequential(
             nn.Linear(self.classifier_in, 32),
             nn.ReLU(inplace=False),
@@ -144,7 +144,7 @@ class Model5(nn.Module):
         self.feature_extractor = nn.Sequential(
             self._convGroup(1, 64, pool_factor=4)
         )
-        self.classifier_in = 64*6*6
+        self.classifier_in = 64*5*5
         self.classifier = nn.Sequential(
             nn.Linear(self.classifier_in, 32),
             nn.ReLU(inplace=False),
@@ -183,7 +183,7 @@ class Model6(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Linear(128, 32),
-            nn.ReLu(True),
+            nn.ReLU(True),
             nn.Linear(32, 1),
             nn.Sigmoid()
         )

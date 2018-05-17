@@ -12,7 +12,7 @@ from torchvision import transforms
 from pytorch_utils.transforms import Zoom, Translation
 from pytorch_utils.datasets import TransformImageDataset
 from pytorch_utils.general import progress_bar
-from pytorch_utils.helpers import Metrics
+from pytorch_utils.helpers.Metrics import Metrics
 from sklearn.model_selection import train_test_split
 import torch.optim as optim
 import numpy as np
@@ -32,6 +32,7 @@ threshold = 0.5
 parser = argparse.ArgumentParser(description='Face Detection')
 parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
 parser.add_argument('--epochs', default=500, type=int, help='nr of epochs')
+parser.add_argument('--model', default=1, type=int, help='type of model')
 parser.add_argument('--resume', '-r', action='store_true',
                     default=False, help='resume from checkpoint')
 parser.add_argument('--test', '-t', action='store_true', default=False,
@@ -42,8 +43,7 @@ parser.add_argument('--small', '-s', action='store_true', default=False, help='u
 parser.add_argument('--checkpoint', default=checkpoint_name, type=str, help='checkpont name to use')
 args = parser.parse_args()
 
-smallStr = '_small' if args.small else ''
-metrics = Metrics(os.path.join(os.path.dirname(__file__), 'logs/{}{}.json'.format(args.checkpoint, smallStr)))
+metrics = Metrics(os.path.join(os.path.dirname(__file__), 'logs/{}.json'.format(args.checkpoint)))
 
 class FaceDataset(Dataset):
     def __init__(self, fileNames, y, transform=None, transform_target=None):
@@ -112,8 +112,8 @@ imsize = (24, 24)
 
 transform_train = transforms.Compose([
     transforms.Grayscale(),
-    # transforms.RandomAffine(10, translate=(0.1, 0.1),
-    #                         scale=(0.9, 1.1), shear=5),
+    transforms.RandomAffine(50, translate=(0.4, 0.4),
+                            scale=(0.6, 1.4), shear=5),
     transforms.RandomHorizontalFlip(),
     transforms.Resize(imsize),
     transforms.ToTensor()
@@ -145,8 +145,19 @@ if args.resume and os.path.isfile(checkpoint_path):
     start_epoch = checkpoint['epoch']
     print('Loaded best acc: {}, Starting epoch: {}'.format(best_acc, start_epoch))
 else:
-    print('==> Building model..')
-    net = Model()
+    print('==> Building model {}...'.format(args.model))
+    if args.model == 1:
+        net = Model()
+    elif args.model == 2:
+        net = Model2()
+    elif args.model == 3:
+        net = Model3()
+    elif args.model == 4:
+        net = Model4()
+    elif args.model == 5:
+        net = Model5()
+    elif args.model == 6:
+        net = Model6()
 
 if use_cuda:
     net.cuda()

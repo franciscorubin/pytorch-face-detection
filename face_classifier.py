@@ -18,7 +18,7 @@ import math
 
 net = None
 threshold = 0.999
-classifier_checkpoint_name = 'celebA_much_faster_0.5'
+classifier_checkpoint_name = 'model4_FULL_augmented'
 
 def init(checkpoint_name=None, threshold_=None):
     global classifier_checkpoint_name
@@ -31,6 +31,7 @@ def init(checkpoint_name=None, threshold_=None):
     if threshold_:
         threshold = threshold_
 
+    print('Classifying with model: {}'.format(classifier_checkpoint_name))
     classifier_checkpoint_path = os.path.join(os.path.dirname(__file__), 'checkpoint/{}.ckpt'.format(classifier_checkpoint_name))
     checkpoint = torch.load(classifier_checkpoint_path, map_location=lambda storage, loc: storage)
 
@@ -40,6 +41,7 @@ def init(checkpoint_name=None, threshold_=None):
         net = torch.nn.DataParallel(net, device_ids=range(torch.cuda.device_count()))
         cudnn.benchmark = True
 
+    return checkpoint
 
 # TODO imsize and transform_test are copied from face_classifier_training. Import them or merge this two files (isFace method also contains stuff of the test method of training)
 imsize = (24, 24)
@@ -80,7 +82,7 @@ def getFaces(imags, already_greyscale=False):
         img_list = torch.stack([transform_test(image) for image in imags])
 
     transformEndTime = time.time()
-    print('Time taken on transforms: {} seconds'.format(transformEndTime-startTime))
+
     if torch.cuda.is_available():
         img_list = img_list.cuda()
 
