@@ -1,0 +1,74 @@
+% !TeX spellcheck = es_ES
+\documentclass[a4paper, 11pt]{article}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage[spanish, activeacute]{babel} %Definir idioma español
+\usepackage[utf8]{inputenc} %Codificacion utf-8
+
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\title{\Large{\textbf{Detección de caras basada en Redes Neuronales}}}
+
+\author{\textit{Francisco Rubin Capalbo}\\
+		Universidad Politécnica de Valencia }
+
+\date{\today}
+
+\begin{document}
+    
+    \maketitle
+    \section{Introducción}
+    
+    \section{}
+
+
+- dataset caras / nocaras
+	- extraccion (google images, celebA)
+	 	- mencionar posible problema al usar haar para extraer las caras de celebA
+- clasificador
+	- data augmentation
+	- data normalization
+		- las imágenes pasadas al clasificador son en blanco y negro  y estan normalizadas
+		- también resizeadas a unas dimensiones fijas (24x24)
+	- diferentes modelos / arquitecturas
+		- bce loss
+		- descripciones modelos
+		- resultados de cada uno de ellos (tabla)
+			- mencionar que todas las pruebas fueron realizadas en un dataset pequeño, incluyendo sólo un 5\% de los datos
+- detector
+	- downscale image to a max witdth and height to reduce number of crops
+	- extracción de crops 
+		- mencionar que al pasar los crops a memoria antes de clasificar mejoró de 180 segundos a 10 segundos
+	- clasificación de crops en cara/no cara
+	- pintar rectángulos en imagen final
+	- tutorial de como usar el detector (para q lo pueda probar el profe)
+- Trabajo futuro
+	- user selective search para selección de crops
+	- probar con depthwise separable convolutionals para mejorar velocidad
+	- aumentar los saltos de zoom y translation para las seleccion de crops usando el modelo con data augmentation potenciada
+	
+
+\begin{thebibliography}{50}
+	
+	\bibitem{demo} 
+	\href{url }{name}
+	\bibitem{demo} 
+	\href{url }{name}
+	\bibitem{demo} 
+	\href{url }{name}
+	\bibitem{demo} 
+	\href{url }{name}
+	\bibitem{demo} 
+	\href{url }{name}
+	\bibitem{demo} 
+	\href{url }{name}
+	
+\end{thebibliography}
+
+\end{document}
