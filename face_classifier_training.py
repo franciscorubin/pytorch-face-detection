@@ -112,8 +112,8 @@ imsize = (24, 24)
 
 transform_train = transforms.Compose([
     transforms.Grayscale(),
-    transforms.RandomAffine(50, translate=(0.4, 0.4),
-                            scale=(0.6, 1.4), shear=5),
+    transforms.RandomAffine(50, translate=(0.1, 0.1),
+                            scale=(0.8, 1.2), shear=5),
     transforms.RandomHorizontalFlip(),
     transforms.Resize(imsize),
     transforms.ToTensor()
