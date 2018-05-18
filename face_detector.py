@@ -1,11 +1,24 @@
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
+
 from PIL import Image, ImageDraw
 import sys
 import random
 from model import Model
 from face_classifier import isFace, getFaces, init
 import numpy as np
+from pytorch_utils.helpers.progress_bar import print_to_tqdm
 import time
+import argparse
+
+
+parser = argparse.ArgumentParser(description='Face Detection')
+parser.add_argument('--image', '-i', default=None, type=str, help='image chosen to detect faces')
+parser.add_argument('--frompath', '-f', default=None, type=str, help='path from which to get images')
+parser.add_argument('--topath', '-t', default=None, type=str, help='path to save images')
+
+args = parser.parse_args()
 
 region_height = 24
 region_width = 24
@@ -22,6 +35,15 @@ class FaceDetector(object):
         self.base_img = self.base_img.convert('L')
         self.scale = 1
         self.resize_img(max_image_size)
+
+    def process(self):
+        start = time.time()
+        (crops_images, crops_info) = self.generate_crops()
+        endCrops = time.time()
+        detections = self.detect_faces(crops_images, crops_info)
+        endDetector = time.time()
+        self.paint_faces(detections)
+        print('Time taken (seconds): Crops: {}, Detection: {}, Total: {}'.format(endCrops - start, endDetector - endCrops, endDetector - start))
 
     def resize_img(self, max_size=500):
         (width, height) = self.base_img.size
@@ -83,23 +105,29 @@ class FaceDetector(object):
         print('Total crops: {}'.format(len(crops_images)))
         return (crops_images, crops_info)
 
-
-if __name__ == '__main__':
+import glob
+from tqdm import tqdm
+def detect_from_path(frompath, topath):
     init()
+    files = glob.glob('{}/**/*.jpg'.format(frompath), recursive=True)
+    with print_to_tqdm() as orig_stdout:
+        for file in tqdm(files, file=orig_stdout, dynamic_ncols=True):
+            detector = FaceDetector(file, max_image_size=500, index_increase=3, zoom_increase=1)
+            detector.process()
 
-    testImage = os.path.join(os.path.dirname(__file__), './data/test/1.jpg')
-    start = time.time()
+            filename = file.split('/')[-1]
+            detector.drawn_img.save('{}/{}.jpg'.format(topath, filename))
 
-    detector = FaceDetector(testImage, max_image_size=500, index_increase=3, zoom_increase=1)
-    endInit = time.time()
-
-    (crops_images, crops_info) = detector.generate_crops()
-    endCrops = time.time()
-
-    detections = detector.detect_faces(crops_images, crops_info)
-    endDetector = time.time()
-
-    detector.paint_faces(detections)
+def detect_single(file):
+    init()
+    detector = FaceDetector(file, max_image_size=500, index_increase=3, zoom_increase=1)
+    detector.process()
     detector.drawn_img.show()
 
-    print('Time taken (seconds): Init: {}, Crops: {}, Detection: {}, Total: {}'.format(endInit - start, endCrops - endInit, endDetector - endCrops, endDetector - start))
+if __name__ == '__main__':
+    if args.image:
+        detect_single(args.image)
+    elif args.frompath and args.topath:
+        detect_from_path(args.frompath, args.topath)
+    else:
+        print('Wrong parameters supplied.')

@@ -1,2 +1,9 @@
 \BOOKMARK [1][-]{section.1}{Introducci\363n}{}% 1
-\BOOKMARK [1][-]{section.2}{}{}% 2
+\BOOKMARK [1][-]{section.2}{Dataset}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{No-caras}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Caras}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Nota}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{Clasificador}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Data Augmentation}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Normalizaci\363n de datos}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.3}{Modelos}{section.3}% 9

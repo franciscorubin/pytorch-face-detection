@@ -37,7 +37,7 @@ def random_string(length):
     return ''.join(random.choice(string.ascii_letters) for m in range(length))
 
 
-def download(keyword=None, limit=10):
+def download(keyword=None, limit=10, path=images_for_nofaces_path):
     # Download images
     if keyword is None:
         keyword = random_string(4)
@@ -45,7 +45,7 @@ def download(keyword=None, limit=10):
 
     response = google_images_download.googleimagesdownload()
     response.download({'keywords': keyword, 'limit': limit,
-                       'output_directory': images_for_nofaces_path, 'format': 'jpg', 'type': 'photo' })
+                       'output_directory': path, 'format': 'jpg', 'type': 'photo' })
     return limit
 
 def remove_with_faces():
