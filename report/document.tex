@@ -29,7 +29,7 @@
 		El dataset necesario para entrenar el clasificador de caras consiste en un conjunto de imágenes que contienen una cara (centrada, con un pequeño margen) y otro conjunto igual de grande que no contiene ninguna. 
 		
 		\subsection{No-caras}
-		Para obtener el conjunto de no-caras\cite{script-no-caras}, he empleado varias herramientas. Por un lado, he descargado imágenes en masa de una API de google imágenes. He utilizado keywords con una gran probabilidad de representar imágenes sin caras, como 'carretera', 'espacio', 'texturas', etc. \\
+		Para obtener el conjunto de no-caras\cite{script-no-caras}, he empleado varias herramientas. Por un lado, he descargado imágenes en masa de una API de google imágenes. He utilizado keywords con una gran probabilidad de representar imágenes sin caras, como ``carretera``, ``espacio``, ``texturas``, etc. \\
 		
 		 A continuación, he utilizado un detector de caras de OpenCV basado en filtros Haar, para descartar las imágenes contenedoras de una o más caras. De las imágenes resultantes he extraído crops de ancho y alto aleatorios en posiciones aleatorias. En total, el dataset de no-caras está compuesto por unas 150 mil imágenes. 
 		 
@@ -48,31 +48,33 @@
 			Todas las imágenes pasadas al clasificador son normalizadas de la misma manera. Primero se convierten a blanco y negro y se aplica una normalización de color (x - mean / std). Por último, se escalan a un tamaño de 24x24 píxeles.
 
 		\subsection{Modelos}
+			Todos los modelos utilizados están compuestos por una parte de extracción de características, compuesta principalmente por capas convolucionales, y otra de clasificación, compuesta por capas fully-connected.  \\
 			
-	- diferentes modelos / arquitecturas
-		- bce loss
-		- descripciones modelos
-		- resultados de cada uno de ellos (tabla)
-			- mencionar que todas las pruebas fueron realizadas en un dataset pequeño, incluyendo sólo un 5\% de los datos
+			He hecho pruebas con diferentes modelos\cite{compare-models}, utilizando un dataset pequeño (5\% del total de imágenes) para poder hacer varias pruebas rápidamente. Después de entrenar todos los modelos, he hecho una comparación de ellos basándome en Accuracy obtenido y en el tiempo que tarda en clasificar 1000 muestras. Ambos valores son importantes para nuestro clasificador. \\
 			
+			Estos son los resultados obtenidos:
 			
-		\begin{table}[htb!]
-			\centering
-			\caption{Evaluación Modelos}
-			\label{evaluacion-modelos}
-			\begin{tabular}{|c|c|c|}
-				\hline
-				\textbf{Modelo}                                                 & \textbf{Accuracy} & \textbf{Tiempo (segundos)} \\ \hline
-				Modelo 1                                                            & 99.766                & 0.316               \\ \hline
-				Modelo 2                                                              & 99.732                & 0.295              \\ \hline
-				Modelo 3                                                   & 99.465                & 0.277                \\ \hline
-				\textbf{Modelo 4}                                                    & \textbf{99.699}             & \textbf{0.271}               \\ \hline
-				Modelo 5                                                    & 99.532             & 0.293               \\ \hline
-				Modelo 6                                                    & 99.766             & 0.393               \\ \hline
-			\end{tabular}
-		\end{table}
+			\begin{table}[htb!]
+				\centering
+				\caption{Evaluación Modelos}
+				\label{evaluacion-modelos}
+				\begin{tabular}{|c|c|c|}
+					\hline
+					\textbf{Modelo}                                                 & \textbf{Accuracy} & \textbf{Tiempo (segundos)} \\ \hline
+					Modelo 1                                                            & 99.766                & 0.316               \\ \hline
+					Modelo 2                                                              & 99.732                & 0.295              \\ \hline
+					Modelo 3                                                   & 99.465                & 0.277                \\ \hline
+					\textbf{Modelo 4}                                                    & \textbf{99.699}             & \textbf{0.271}               \\ \hline
+					Modelo 5                                                    & 99.532             & 0.293               \\ \hline
+					Modelo 6                                                    & 99.766             & 0.393               \\ \hline
+				\end{tabular}
+			\end{table}
 			
+			En el apendice A muestro la descripción de cada uno de los modelos. \\
 			
+			En la Figura 1 vemos el loss obtenido por epoch en el modelo elegido finalmente (Modelo 4) utilizando el dataset completo.
+			
+					
 			\begin{figure}[htb!]
 				\begin{minipage}{1\textwidth}
 					\centering
@@ -81,82 +83,96 @@
 					\label{fig:model4_losses_per_epoch}
 				\end{minipage}\hfill
 			\end{figure}
-		
-		
-		\begin{figure}[htb!]
-			\begin{minipage}{1\textwidth}
-				\centering
-				\includegraphics[scale=.5]{pics/convgroup}
-			\end{minipage}\hfill
-		\end{figure}
+			
+		\subsection{Detector}
+			La función del detector es recibir una imagen de dimensiones desconocidas y devolver la misma imagen con rectángulos en los sitios en los que haya una cara. Sigue cuatro pasos:\\
+			
+			\begin{enumerate}
+				\item Escalar la imagen para alcanzar una anchura y altura máximas si es necesario, para reducir el número de crops. 
+				\item Extracción de crops utilizando una ventana en movimiento que da saltos de \textit{index\_increase} píxeles en vertical y horizontal recorriéndose la imagen. Cuando termina de recorrer la imagen completa, aumenta el zoom en z unidades, y vuelve a empezar. Repite hasta que la imagen es demasiado pequeña para realizar el crop.
+				\item 
+			\end{enumerate}
+			- detector
+				- downscale image to a max witdth and height to reduce number of crops
+				- extracción de crops 
+					- mencionar que al pasar los crops a memoria antes de clasificar mejoró de 180 segundos a 10 segundos
+				- clasificación de crops en cara/no cara
+				- pintar rectángulos en imagen final
+				- tutorial de como usar el detector (para q lo pueda probar el profe)
+				- explicar efecto de params max image size, 
+				
+		\subsection{Trabajo Futuro}
+			- Trabajo futuro
+				- user selective search para selección de crops
+				- probar con depthwise separable convolutionals para mejorar velocidad
+				- aumentar los saltos de zoom y translation para las seleccion de crops usando el modelo con data augmentation potenciada
+				
+	\subsection{Apéndice A: Modelos}
+		Todos los modelos utilizan como bloque principal de extracción de características un ConvGroup, que está formado por las siguientes capas:
 	
-
-			\begin{figure}[htb!]
+	
+	\begin{figure}[htb!]
+		\begin{minipage}{1\textwidth}
+			\centering
+			\includegraphics[scale=.5]{pics/convgroup}
+		\end{minipage}\hfill
+	\end{figure}
+	
+		Modelos:
+	
+	\begin{figure}[htb!]
 		\begin{minipage}{1\textwidth}
 			\centering
 			\includegraphics[scale=.5]{pics/model1}
-					\caption{Modelo 1}
+			\caption{Modelo 1}
 		\end{minipage}\hfill
 	\end{figure}
-
-
-		\begin{figure}[htb!]
-	\begin{minipage}{1\textwidth}
-		\centering
-		\includegraphics[scale=.5]{pics/model2}
-				\caption{Modelo 2}
-	\end{minipage}\hfill
-\end{figure}
-
-
-		\begin{figure}[htb!]
-	\begin{minipage}{1\textwidth}
-		\centering
-		\includegraphics[scale=.5]{pics/model3}
-		\caption{Modelo 3}
-	\end{minipage}\hfill
-\end{figure}
-
-
-		\begin{figure}[htb!]
-	\begin{minipage}{1\textwidth}
-		\centering
-		\includegraphics[scale=.5]{pics/model4}
-				\caption{Modelo 4}
-	\end{minipage}\hfill
-\end{figure}		
-
-
-		\begin{figure}[htb!]
-	\begin{minipage}{1\textwidth}
-		\centering
-		\includegraphics[scale=.5]{pics/model5}
-				\caption{Modelo 5}
-	\end{minipage}\hfill
-\end{figure}
-
-
-\begin{figure}[htb!]
-	\begin{minipage}{1\textwidth}
-		\centering
-		\includegraphics[scale=.5]{pics/model6}
-				\caption{Modelo 6}
-	\end{minipage}\hfill
-\end{figure}	
-			
-- detector
-	- downscale image to a max witdth and height to reduce number of crops
-	- extracción de crops 
-		- mencionar que al pasar los crops a memoria antes de clasificar mejoró de 180 segundos a 10 segundos
-	- clasificación de crops en cara/no cara
-	- pintar rectángulos en imagen final
-	- tutorial de como usar el detector (para q lo pueda probar el profe)
-- Trabajo futuro
-	- user selective search para selección de crops
-	- probar con depthwise separable convolutionals para mejorar velocidad
-	- aumentar los saltos de zoom y translation para las seleccion de crops usando el modelo con data augmentation potenciada
 	
-
+	
+	\begin{figure}[htb!]
+		\begin{minipage}{1\textwidth}
+			\centering
+			\includegraphics[scale=.5]{pics/model2}
+			\caption{Modelo 2}
+		\end{minipage}\hfill
+	\end{figure}
+	
+	
+	\begin{figure}[htb!]
+		\begin{minipage}{1\textwidth}
+			\centering
+			\includegraphics[scale=.5]{pics/model3}
+			\caption{Modelo 3}
+		\end{minipage}\hfill
+	\end{figure}
+	
+	
+	\begin{figure}[htb!]
+		\begin{minipage}{1\textwidth}
+			\centering
+			\includegraphics[scale=.5]{pics/model4}
+			\caption{Modelo 4}
+		\end{minipage}\hfill
+	\end{figure}		
+	
+	
+	\begin{figure}[htb!]
+		\begin{minipage}{1\textwidth}
+			\centering
+			\includegraphics[scale=.5]{pics/model5}
+			\caption{Modelo 5}
+		\end{minipage}\hfill
+	\end{figure}
+	
+	
+	\begin{figure}[htb!]
+		\begin{minipage}{1\textwidth}
+			\centering
+			\includegraphics[scale=.5]{pics/model6}
+			\caption{Modelo 6}
+		\end{minipage}\hfill
+	\end{figure}	
+		
 \begin{thebibliography}{50}
 	
 	\bibitem{script-no-caras} 
@@ -167,8 +183,8 @@
 	\href{https://github.com/pancho111203/pytorch-face-detection/blob/master/scripts/crop_faces.py}{Script obtención caras}
 	\bibitem{classifier-training} 
 	\href{https://github.com/pancho111203/pytorch-face-detection/blob/master/face_classifier_training.py}{Entrenamiento clasificador}
-	\bibitem{demo} 
-	\href{url }{name}
+	\bibitem{compare-models} 
+	\href{https://github.com/pancho111203/pytorch-face-detection/blob/master/compare-models.py}{Script para comparar modelos}
 	\bibitem{demo} 
 	\href{url }{name}
 	\bibitem{demo} 

@@ -17,6 +17,9 @@ parser = argparse.ArgumentParser(description='Face Detection')
 parser.add_argument('--image', '-i', default=None, type=str, help='image chosen to detect faces')
 parser.add_argument('--frompath', '-f', default=None, type=str, help='path from which to get images')
 parser.add_argument('--topath', '-t', default=None, type=str, help='path to save images')
+parser.add_argument('--index-increase', '-ii', default=3, type=int, help='amount of pixels that the window moves to obtain crops')
+parser.add_argument('--zoom-increase', '-zi', default=1, type=int, help='amount of zoom to obtain crops')
+parser.add_argument('--max-image-size', '-mis', default=500, type=int, help='max value of a dimension of input image. if higher, it gets resized')
 
 args = parser.parse_args()
 
@@ -107,27 +110,27 @@ class FaceDetector(object):
 
 import glob
 from tqdm import tqdm
-def detect_from_path(frompath, topath):
+def detect_from_path(frompath, topath, max_image_size, index_increase, zoom_increase):
     init()
     files = glob.glob('{}/**/*.jpg'.format(frompath), recursive=True)
     with print_to_tqdm() as orig_stdout:
         for file in tqdm(files, file=orig_stdout, dynamic_ncols=True):
-            detector = FaceDetector(file, max_image_size=500, index_increase=3, zoom_increase=1)
+            detector = FaceDetector(file, max_image_size=max_image_size, index_increase=index_increase, zoom_increase=zoom_increase)
             detector.process()
 
             filename = file.split('/')[-1]
             detector.drawn_img.save('{}/{}.jpg'.format(topath, filename))
 
-def detect_single(file):
+def detect_single(file, max_image_size, index_increase, zoom_increase):
     init()
-    detector = FaceDetector(file, max_image_size=500, index_increase=3, zoom_increase=1)
+    detector = FaceDetector(file, max_image_size=max_image_size, index_increase=index_increase, zoom_increase=zoom_increase)
     detector.process()
     detector.drawn_img.show()
 
 if __name__ == '__main__':
     if args.image:
-        detect_single(args.image)
+        detect_single(args.image, max_image_size=args.max_image_size, index_increase=args.index_increase, zoom_increase=args.zoom_increase)
     elif args.frompath and args.topath:
-        detect_from_path(args.frompath, args.topath)
+        detect_from_path(args.frompath, args.topath, max_image_size=args.max_image_size, index_increase=args.index_increase, zoom_increase=args.zoom_increase)
     else:
         print('Wrong parameters supplied.')

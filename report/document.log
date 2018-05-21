@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.10.18)  17 MAY 2018 21:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.10.18)  21 MAY 2018 19:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -662,9 +662,6 @@ LaTeX Warning: Label `demo' multiply defined.
 
 LaTeX Warning: Label `demo' multiply defined.
 
-
-LaTeX Warning: Label `demo' multiply defined.
-
 )
 \openout1 = `document.aux'.
 
@@ -779,121 +776,131 @@ Underfull \hbox (badness 10000) in paragraph at lines 32--33
 [1
 
 {/usr/local/texlive/2017basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<pics/model4_losses_per_epoch.png, id=56, 462.528pt x 346.896pt>
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
+
+ []
+
+<pics/model4_losses_per_epoch.png, id=69, 462.528pt x 346.896pt>
 File: pics/model4_losses_per_epoch.png Graphic file (type png)
 
 <use pics/model4_losses_per_epoch.png>
-Package pdftex.def Info: pics/model4_losses_per_epoch.png used on input line 79
+Package pdftex.def Info: pics/model4_losses_per_epoch.png used on input line 81
 .
 (pdftex.def)             Requested size: 231.26343pt x 173.44757pt.
 
-<pics/convgroup.png, id=58, 814.04124pt x 151.56625pt>
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
+
+ []
+
+[2] <pics/convgroup.png, id=79, 814.04124pt x 151.56625pt>
 File: pics/convgroup.png Graphic file (type png)
 
 <use pics/convgroup.png>
-Package pdftex.def Info: pics/convgroup.png used on input line 89.
+Package pdftex.def Info: pics/convgroup.png used on input line 117.
 (pdftex.def)             Requested size: 407.01962pt x 75.78293pt.
- <pics/model1.png, id=59, 723.70375pt x 61.22874pt>
+ <pics/model1.png, id=80, 723.70375pt x 61.22874pt>
 File: pics/model1.png Graphic file (type png)
 
 <use pics/model1.png>
-Package pdftex.def Info: pics/model1.png used on input line 97.
+Package pdftex.def Info: pics/model1.png used on input line 126.
 (pdftex.def)             Requested size: 361.85098pt x 30.61429pt.
- <pics/model2.png, id=60, 723.70375pt x 61.22874pt>
+ <pics/model2.png, id=81, 723.70375pt x 61.22874pt>
 File: pics/model2.png Graphic file (type png)
 
 <use pics/model2.png>
-Package pdftex.def Info: pics/model2.png used on input line 106.
+Package pdftex.def Info: pics/model2.png used on input line 135.
 (pdftex.def)             Requested size: 361.85098pt x 30.61429pt.
- <pics/model3.png, id=61, 923.45pt x 61.22874pt>
+ <pics/model3.png, id=82, 923.45pt x 61.22874pt>
 File: pics/model3.png Graphic file (type png)
 
 <use pics/model3.png>
-Package pdftex.def Info: pics/model3.png used on input line 115.
+Package pdftex.def Info: pics/model3.png used on input line 144.
 (pdftex.def)             Requested size: 461.72386pt x 30.61429pt.
 
-Overfull \hbox (6.47975pt too wide) in paragraph at lines 115--116
+Overfull \hbox (6.47975pt too wide) in paragraph at lines 144--145
  [][] 
  []
 
-<pics/model4.png, id=62, 522.95375pt x 61.22874pt>
+<pics/model4.png, id=83, 522.95375pt x 61.22874pt>
 File: pics/model4.png Graphic file (type png)
  <use pics/model4.png>
-Package pdftex.def Info: pics/model4.png used on input line 124.
+Package pdftex.def Info: pics/model4.png used on input line 153.
 (pdftex.def)             Requested size: 261.47623pt x 30.61429pt.
 
-<pics/model5.png, id=63, 522.95375pt x 61.22874pt>
+<pics/model5.png, id=84, 522.95375pt x 61.22874pt>
 File: pics/model5.png Graphic file (type png)
  <use pics/model5.png>
-Package pdftex.def Info: pics/model5.png used on input line 133.
+Package pdftex.def Info: pics/model5.png used on input line 162.
 (pdftex.def)             Requested size: 261.47623pt x 30.61429pt.
 
-<pics/model6.png, id=64, 923.45pt x 61.22874pt>
+<pics/model6.png, id=85, 923.45pt x 61.22874pt>
 File: pics/model6.png Graphic file (type png)
  <use pics/model6.png>
-Package pdftex.def Info: pics/model6.png used on input line 142.
+Package pdftex.def Info: pics/model6.png used on input line 171.
 (pdftex.def)             Requested size: 461.72386pt x 30.61429pt.
 
-Overfull \hbox (6.47975pt too wide) in paragraph at lines 142--143
+Overfull \hbox (6.47975pt too wide) in paragraph at lines 171--172
  [][] 
  []
 
-[2 <./pics/model4_losses_per_epoch.png>] [3 <./pics/convgroup.png> <./pics/mode
-l1.png> <./pics/model2.png> <./pics/model3.png> <./pics/model4.png> <./pics/mod
-el5.png> <./pics/model6.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 184.
+[3 <./pics/model4_losses_per_epoch.png> <./pics/convgroup.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 200.
  [4pdfTeX warning (ext4): destination with the same identifier (name{cite.demo}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.184 \end{document}
+l.200 \end{document}
                     pdfTeX warning (ext4): destination with the same identifier
  (name{cite.demo}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.184 \end{document}
+l.200 \end{document}
                     pdfTeX warning (ext4): destination with the same identifier
  (name{cite.demo}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.184 \end{document}
+l.200 \end{document}
                     pdfTeX warning (ext4): destination with the same identifier
  (name{cite.demo}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.184 \end{document}
-                    pdfTeX warning (ext4): destination with the same identifier
- (name{cite.demo}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.184 \end{document}
-                    ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 184.
+l.200 \end{document}
+                     <./pics/model1.png> <./pics/model2.png> <./pics/model3.png
+> <./pics/model4.png> <./pics/model5.png> <./pics/model6.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 200.
  (./document.aux
 LaTeX Info: Redefining \. on input line 28.
 LaTeX Info: Redefining \% on input line 28.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 184.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 184.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 200.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 200.
 Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: 5F4A4101B4B99B8A24D0368386EFB588;499.
-
+(rerunfilecheck)             Checksum: 1A78E69B6B3C453F218397D5C08C96CD;693.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 184.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 200.
  ) 
 Here is how much of TeX's memory you used:
- 8415 strings out of 494437
- 120100 string characters out of 6166644
- 233571 words of memory out of 5000000
- 11635 multiletter control sequences out of 15000+600000
- 10056 words of font info for 36 fonts, out of 8000000 for 9000
+ 8427 strings out of 494437
+ 120245 string characters out of 6166644
+ 232608 words of memory out of 5000000
+ 11639 multiletter control sequences out of 15000+600000
+ 10402 words of font info for 37 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  41i,9n,35p,558b,466s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx1
@@ -901,11 +908,12 @@ Here is how much of TeX's memory you used:
 mbx12.pfb></usr/local/texlive/2017basic/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmr10.pfb></usr/local/texlive/2017basic/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmr12.pfb></usr/local/texlive/2017basic/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmti12.pfb>
-Output written on document.pdf (4 pages, 155854 bytes).
+fonts/cm/cmti10.pfb></usr/local/texlive/2017basic/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmti12.pfb>
+Output written on document.pdf (4 pages, 169329 bytes).
 PDF statistics:
- 133 PDF objects out of 1000 (max. 8388607)
- 104 compressed objects within 2 object streams
- 28 named destinations out of 1000 (max. 500000)
- 113 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 125 compressed objects within 2 object streams
+ 35 named destinations out of 1000 (max. 500000)
+ 137 words of extra memory for PDF output out of 10000 (max. 10000000)
 
